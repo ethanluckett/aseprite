@@ -369,6 +369,62 @@ namespace ui {
 
     virtual bool onProcessMessage(Message* msg);
 
+    virtual bool onOpenMessage(Message* msg);
+    virtual bool onCloseMessage(Message* msg);
+    virtual bool onCloseDisplayMessage(Message* msg);
+    virtual bool onResizeDisplayMessage(Message* msg);
+    virtual bool onPaintMessage(Message* msg);
+    virtual bool onTimerMessage(Message* msg);
+    virtual bool onDropFilesMessage(Message* msg);
+    virtual bool onWinMoveMessage(Message* msg);
+
+    // Keyboard related messages.
+    virtual bool onKeyDownMessage(Message* msg);
+    virtual bool onKeyUpMessage(Message* msg);
+    virtual bool onFocusEnterMessage(Message* msg);
+    virtual bool onFocusLeaveMessage(Message* msg);
+
+    // Mouse related messages.
+    virtual bool onMouseDownMessage(Message* msg);
+    virtual bool onMouseUpMessage(Message* msg);
+    virtual bool onDoubleClickMessage(Message* msg);
+    virtual bool onMouseEnterMessage(Message* msg);
+    virtual bool onMouseLeaveMessage(Message* msg);
+    virtual bool onMouseMoveMessage(Message* msg);
+    virtual bool onSetCursorMessage(Message* msg);
+    virtual bool onMouseWheelMessage(Message* msg);
+
+    virtual bool onTouchMagnifyMessage(Message* msg);
+
+    typedef bool (Widget::*MessageHandler)(Message*);
+
+    MessageHandler m_message_handlers[21] = {
+      &Widget::onOpenMessage,
+      &Widget::onCloseMessage,
+      &Widget::onCloseDisplayMessage,
+      &Widget::onResizeDisplayMessage,
+      &Widget::onPaintMessage,
+      &Widget::onTimerMessage,
+      &Widget::onDropFilesMessage,
+      &Widget::onWinMoveMessage,
+
+      &Widget::onKeyDownMessage,
+      &Widget::onKeyUpMessage,
+      &Widget::onFocusEnterMessage,
+      &Widget::onFocusLeaveMessage,
+
+      &Widget::onMouseDownMessage,
+      &Widget::onMouseUpMessage,
+      &Widget::onDoubleClickMessage,
+      &Widget::onMouseEnterMessage,
+      &Widget::onMouseLeaveMessage,
+      &Widget::onMouseMoveMessage,
+      &Widget::onSetCursorMessage,
+      &Widget::onMouseWheelMessage,
+
+      &Widget::onTouchMagnifyMessage,
+    };
+
     // ===============================================================
     // EVENTS
     // ===============================================================
