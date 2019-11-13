@@ -17,6 +17,7 @@
 #include "app/ui/editor/editor_observer.h"
 #include "app/ui/input_chain_element.h"
 #include "app/ui/timeline/ani_controls.h"
+#include "app/util/layer_boundaries.h"
 #include "doc/frame.h"
 #include "doc/layer.h"
 #include "doc/selected_frames.h"
@@ -42,6 +43,33 @@ namespace ui {
 }
 
 namespace app {
+
+  enum {
+    PART_NOTHING = 0,
+    PART_TOP,
+    PART_SEPARATOR,
+    PART_HEADER_EYE,
+    PART_HEADER_PADLOCK,
+    PART_HEADER_CONTINUOUS,
+    PART_HEADER_GEAR,
+    PART_HEADER_ONIONSKIN,
+    PART_HEADER_ONIONSKIN_RANGE_LEFT,
+    PART_HEADER_ONIONSKIN_RANGE_RIGHT,
+    PART_HEADER_LAYER,
+    PART_HEADER_FRAME,
+    PART_ROW,
+    PART_ROW_EYE_ICON,
+    PART_ROW_PADLOCK_ICON,
+    PART_ROW_CONTINUOUS_ICON,
+    PART_ROW_TEXT,
+    PART_CEL,
+    PART_RANGE_OUTLINE,
+    PART_TAG,
+    PART_TAGS,
+    PART_TAG_BAND,
+    PART_TAG_SWITCH_BUTTONS,
+    PART_TAG_SWITCH_BAND_BUTTON,
+  };
 
   namespace skin {
     class SkinTheme;
@@ -134,6 +162,19 @@ namespace app {
 
   protected:
     bool onProcessMessage(ui::Message* msg) override;
+    bool onFocusEnterMessage(ui::Message* msg) override;
+    bool onTimerMessage(ui::Message* msg) override;
+    bool onMouseDownMessage(ui::Message* msg) override;
+    bool onMouseLeaveMessage(ui::Message* msg) override;
+    bool onMouseMoveMessage(ui::Message* msg) override;
+    bool onMouseUpMessage(ui::Message* msg) override;
+    bool onDoubleClickMessage(ui::Message* msg) override;
+    bool onKeyDownMessage(ui::Message* msg) override;
+    bool onKeyUpMessage(ui::Message* msg) override;
+    bool onMouseWheelMessage(ui::Message* msg) override;
+    bool onSetCursorMessage(ui::Message* msg) override;
+    bool onTouchMagnifyMessage(ui::Message* msg) override;
+
     void onInitTheme(ui::InitThemeEvent& ev) override;
     void onInvalidateRegion(const gfx::Region& region) override;
     void onSizeHint(ui::SizeHintEvent& ev) override;
@@ -241,6 +282,10 @@ namespace app {
       int m_level;
       LayerFlags m_inheritedFlags;
     };
+
+    bool is_copy_key_pressed(ui::Message* msg);
+    bool is_select_layer_in_canvas_key_pressed(ui::Message* msg);
+    SelectLayerBoundariesOp get_select_layer_in_canvas_op(ui::Message* msg);
 
     bool selectedLayersBounds(const SelectedLayers& layers,
                               layer_t* first, layer_t* last) const;

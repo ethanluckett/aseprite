@@ -380,6 +380,7 @@ if(ENABLE_UI)
     ui/task_widget.cpp
     ui/timeline/ani_controls.cpp
     ui/timeline/timeline.cpp
+    ui/timeline/timeline_messages.cpp
     ui/toolbar.cpp
     ui/user_data_popup.cpp
     ui/workspace.cpp
