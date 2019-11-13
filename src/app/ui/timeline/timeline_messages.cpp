@@ -39,12 +39,12 @@ bool Timeline::onProcessMessage(Message* msg)
   return Widget::onProcessMessage(msg);
 }
 
-bool Timeline::onFocusEnterMessage(Message* msg) {
+bool Timeline::onFocusEnter(Message* msg) {
     App::instance()->inputChain().prioritize(this, msg);
     return false;
 }
 
-bool Timeline::onTimerMessage(Message* msg) {
+bool Timeline::onTimer(Message* msg) {
   if (static_cast<TimerMessage*>(msg)->timer() == &m_clipboard_timer) {
     Doc* clipboard_document;
     DocRange clipboard_range;
@@ -73,7 +73,7 @@ bool Timeline::onTimerMessage(Message* msg) {
   return false;
 }
 
-bool Timeline::onMouseDownMessage(Message* msg) {
+bool Timeline::onMouseDown(Message* msg) {
   MouseMessage* mouseMsg = static_cast<MouseMessage*>(msg);
 
   if (!m_document)
@@ -411,7 +411,7 @@ bool Timeline::onMouseDownMessage(Message* msg) {
   return false;
 }
 
-bool Timeline::onMouseLeaveMessage(Message* msg) {
+bool Timeline::onMouseLeave(Message* msg) {
   if (m_hot.part != PART_NOTHING) {
     invalidateHit(m_hot);
     m_hot = Hit();
@@ -419,7 +419,7 @@ bool Timeline::onMouseLeaveMessage(Message* msg) {
   return false;
 }
 
-bool Timeline::onMouseMoveMessage(Message* msg) {
+bool Timeline::onMouseMove(Message* msg) {
   if (!m_document)
     return false;
 
@@ -606,7 +606,7 @@ bool Timeline::onMouseMoveMessage(Message* msg) {
   return true;
 }
 
-bool Timeline::onMouseUpMessage(Message* msg) {
+bool Timeline::onMouseUp(Message* msg) {
   if (hasCapture()) {
     ASSERT(m_document != NULL);
 
@@ -777,7 +777,7 @@ bool Timeline::onMouseUpMessage(Message* msg) {
   return false;
 }
 
-bool Timeline::onDoubleClickMessage(Message* msg) {
+bool Timeline::onDoubleClick(Message* msg) {
   switch (m_hot.part) {
 
       case PART_ROW_TEXT: {
@@ -821,7 +821,7 @@ bool Timeline::onDoubleClickMessage(Message* msg) {
   return false;
 }
 
-bool Timeline::onKeyDownMessage(Message* msg) {
+bool Timeline::onKeyDown(Message* msg) {
   bool used = false;
 
   switch (static_cast<KeyMessage*>(msg)->scancode()) {
@@ -862,7 +862,7 @@ bool Timeline::onKeyDownMessage(Message* msg) {
   return false;
 }
 
-bool Timeline::onKeyUpMessage(Message* msg) {
+bool Timeline::onKeyUp(Message* msg) {
   bool used = false;
 
   switch (static_cast<KeyMessage*>(msg)->scancode()) {
@@ -881,7 +881,7 @@ bool Timeline::onKeyUpMessage(Message* msg) {
   return false;
 }
 
-bool Timeline::onMouseWheelMessage(Message* msg) {
+bool Timeline::onMouseWheel(Message* msg) {
   if (m_document) {
     gfx::Point delta = static_cast<MouseMessage*>(msg)->wheelDelta();
     const bool precise = static_cast<MouseMessage*>(msg)->preciseWheel();
@@ -922,7 +922,7 @@ bool Timeline::onMouseWheelMessage(Message* msg) {
   return false;
 }
 
-bool Timeline::onSetCursorMessage(Message* msg) {
+bool Timeline::onSetCursor(Message* msg) {
   if (m_document) {
     setCursor(msg, m_hot);
     return true;
@@ -931,7 +931,7 @@ bool Timeline::onSetCursorMessage(Message* msg) {
   return false;
 }
 
-bool Timeline::onTouchMagnifyMessage(Message* msg) {
+bool Timeline::onTouchMagnify(Message* msg) {
   setZoomAndUpdate(
       m_zoom + m_zoom * static_cast<ui::TouchMessage*>(msg)->magnification(),
       true);

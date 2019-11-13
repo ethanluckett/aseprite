@@ -369,60 +369,60 @@ namespace ui {
 
     virtual bool onProcessMessage(Message* msg);
 
-    virtual bool onOpenMessage(Message* msg);
-    virtual bool onCloseMessage(Message* msg);
-    virtual bool onCloseDisplayMessage(Message* msg);
-    virtual bool onResizeDisplayMessage(Message* msg);
-    virtual bool onPaintMessage(Message* msg);
-    virtual bool onTimerMessage(Message* msg);
-    virtual bool onDropFilesMessage(Message* msg);
-    virtual bool onWinMoveMessage(Message* msg);
+    virtual bool onOpen(Message* msg);
+    virtual bool onClose(Message* msg);
+    virtual bool onCloseDisplay(Message* msg);
+    virtual bool onResizeDisplay(Message* msg);
+    virtual bool onPaint(Message* msg);
+    virtual bool onTimer(Message* msg);
+    virtual bool onDropFiles(Message* msg);
+    virtual bool onWinMove(Message* msg);
 
     // Keyboard related messages.
-    virtual bool onKeyDownMessage(Message* msg);
-    virtual bool onKeyUpMessage(Message* msg);
-    virtual bool onFocusEnterMessage(Message* msg);
-    virtual bool onFocusLeaveMessage(Message* msg);
+    virtual bool onKeyDown(Message* msg);
+    virtual bool onKeyUp(Message* msg);
+    virtual bool onFocusEnter(Message* msg);
+    virtual bool onFocusLeave(Message* msg);
 
     // Mouse related messages.
-    virtual bool onMouseDownMessage(Message* msg);
-    virtual bool onMouseUpMessage(Message* msg);
-    virtual bool onDoubleClickMessage(Message* msg);
-    virtual bool onMouseEnterMessage(Message* msg);
-    virtual bool onMouseLeaveMessage(Message* msg);
-    virtual bool onMouseMoveMessage(Message* msg);
-    virtual bool onSetCursorMessage(Message* msg);
-    virtual bool onMouseWheelMessage(Message* msg);
+    virtual bool onMouseDown(Message* msg);
+    virtual bool onMouseUp(Message* msg);
+    virtual bool onDoubleClick(Message* msg);
+    virtual bool onMouseEnter(Message* msg);
+    virtual bool onMouseLeave(Message* msg);
+    virtual bool onMouseMove(Message* msg);
+    virtual bool onSetCursor(Message* msg);
+    virtual bool onMouseWheel(Message* msg);
 
-    virtual bool onTouchMagnifyMessage(Message* msg);
+    virtual bool onTouchMagnify(Message* msg);
 
     typedef bool (Widget::*MessageHandler)(Message*);
 
     MessageHandler m_message_handlers[21] = {
-      &Widget::onOpenMessage,
-      &Widget::onCloseMessage,
-      &Widget::onCloseDisplayMessage,
-      &Widget::onResizeDisplayMessage,
-      &Widget::onPaintMessage,
-      &Widget::onTimerMessage,
-      &Widget::onDropFilesMessage,
-      &Widget::onWinMoveMessage,
+      &Widget::onOpen,
+      &Widget::onClose,
+      &Widget::onCloseDisplay,
+      &Widget::onResizeDisplay,
+      &Widget::onPaint,
+      &Widget::onTimer,
+      &Widget::onDropFiles,
+      &Widget::onWinMove,
 
-      &Widget::onKeyDownMessage,
-      &Widget::onKeyUpMessage,
-      &Widget::onFocusEnterMessage,
-      &Widget::onFocusLeaveMessage,
+      &Widget::onKeyDown,
+      &Widget::onKeyUp,
+      &Widget::onFocusEnter,
+      &Widget::onFocusLeave,
 
-      &Widget::onMouseDownMessage,
-      &Widget::onMouseUpMessage,
-      &Widget::onDoubleClickMessage,
-      &Widget::onMouseEnterMessage,
-      &Widget::onMouseLeaveMessage,
-      &Widget::onMouseMoveMessage,
-      &Widget::onSetCursorMessage,
-      &Widget::onMouseWheelMessage,
+      &Widget::onMouseDown,
+      &Widget::onMouseUp,
+      &Widget::onDoubleClick,
+      &Widget::onMouseEnter,
+      &Widget::onMouseLeave,
+      &Widget::onMouseMove,
+      &Widget::onSetCursor,
+      &Widget::onMouseWheel,
 
-      &Widget::onTouchMagnifyMessage,
+      &Widget::onTouchMagnify,
     };
 
     // ===============================================================

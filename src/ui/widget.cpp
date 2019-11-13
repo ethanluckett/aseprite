@@ -1408,27 +1408,27 @@ bool Widget::onProcessMessage(Message* msg)
   return false;
 }
 
-bool Widget::onOpenMessage(Message* msg) {
+bool Widget::onOpen(Message* msg) {
   for (auto child : m_children)
     child->sendMessage(msg);
   return false;
 }
 
-bool Widget::onCloseMessage(Message* msg) {
+bool Widget::onClose(Message* msg) {
   for (auto child : m_children)
     child->sendMessage(msg);
   return false;
 }
 
-bool Widget::onCloseDisplayMessage(Message* msg) {
+bool Widget::onCloseDisplay(Message* msg) {
   return false;
 }
 
-bool Widget::onResizeDisplayMessage(Message* msg) {
+bool Widget::onResizeDisplay(Message* msg) {
   return false;
 }
 
-bool Widget::onPaintMessage(Message* msg) {
+bool Widget::onPaint(Message* msg) {
   const PaintMessage* ptmsg = static_cast<const PaintMessage*>(msg);
   ASSERT(ptmsg->rect().w > 0);
   ASSERT(ptmsg->rect().h > 0);
@@ -1437,47 +1437,47 @@ bool Widget::onPaintMessage(Message* msg) {
   return paintEvent(graphics.get(), false);
 }
 
-bool Widget::onTimerMessage(Message* msg) {
+bool Widget::onTimer(Message* msg) {
   return false;
 }
 
-bool Widget::onDropFilesMessage(Message* msg) {
+bool Widget::onDropFiles(Message* msg) {
   return false;
 }
 
-bool Widget::onWinMoveMessage(Message* msg) {
+bool Widget::onWinMove(Message* msg) {
   for (auto child : m_children)
     child->sendMessage(msg);
   return false;
 }
 
 // Keyboard related messages.
-bool Widget::onKeyDownMessage(Message* msg) {
+bool Widget::onKeyDown(Message* msg) {
   return false;
 }
 
-bool Widget::onKeyUpMessage(Message* msg) {
+bool Widget::onKeyUp(Message* msg) {
   return false;
 }
 
-bool Widget::onFocusEnterMessage(Message* msg) {
+bool Widget::onFocusEnter(Message* msg) {
   return false;
 }
 
-bool Widget::onFocusLeaveMessage(Message* msg) {
+bool Widget::onFocusLeave(Message* msg) {
   return false;
 }
 
 // Mouse related messages.
-bool Widget::onMouseDownMessage(Message* msg) {
+bool Widget::onMouseDown(Message* msg) {
   return parent() ? parent()->sendMessage(msg) : false;
 }
 
-bool Widget::onMouseUpMessage(Message* msg) {
+bool Widget::onMouseUp(Message* msg) {
     return parent() ? parent()->sendMessage(msg) : false;
 }
 
-bool Widget::onDoubleClickMessage(Message* msg) {
+bool Widget::onDoubleClick(Message* msg) {
   // Convert double clicks into mouse down
   MouseMessage* mouseMsg = static_cast<MouseMessage*>(msg);
   MouseMessage mouseMsg2(kMouseDownMessage,
@@ -1491,19 +1491,19 @@ bool Widget::onDoubleClickMessage(Message* msg) {
   return false;
 }
 
-bool Widget::onMouseEnterMessage(Message* msg) {
+bool Widget::onMouseEnter(Message* msg) {
   return false;
 }
 
-bool Widget::onMouseLeaveMessage(Message* msg) {
+bool Widget::onMouseLeave(Message* msg) {
   return false;
 }
 
-bool Widget::onMouseMoveMessage(Message* msg) {
+bool Widget::onMouseMove(Message* msg) {
   return parent() ? parent()->sendMessage(msg) : false;
 }
 
-bool Widget::onSetCursorMessage(Message* msg) {
+bool Widget::onSetCursor(Message* msg) {
   if (parent())
     return parent()->sendMessage(msg);
   else {
@@ -1513,11 +1513,11 @@ bool Widget::onSetCursorMessage(Message* msg) {
   return false;
 }
 
-bool Widget::onMouseWheelMessage(Message* msg) {
+bool Widget::onMouseWheel(Message* msg) {
   return parent() ? parent()->sendMessage(msg) : false;
 }
 
-bool Widget::onTouchMagnifyMessage(Message* msg) {
+bool Widget::onTouchMagnify(Message* msg) {
   return false;
 }
 

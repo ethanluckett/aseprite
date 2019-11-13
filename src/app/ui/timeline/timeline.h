@@ -162,18 +162,19 @@ namespace app {
 
   protected:
     bool onProcessMessage(ui::Message* msg) override;
-    bool onFocusEnterMessage(ui::Message* msg) override;
-    bool onTimerMessage(ui::Message* msg) override;
-    bool onMouseDownMessage(ui::Message* msg) override;
-    bool onMouseLeaveMessage(ui::Message* msg) override;
-    bool onMouseMoveMessage(ui::Message* msg) override;
-    bool onMouseUpMessage(ui::Message* msg) override;
-    bool onDoubleClickMessage(ui::Message* msg) override;
-    bool onKeyDownMessage(ui::Message* msg) override;
-    bool onKeyUpMessage(ui::Message* msg) override;
-    bool onMouseWheelMessage(ui::Message* msg) override;
-    bool onSetCursorMessage(ui::Message* msg) override;
-    bool onTouchMagnifyMessage(ui::Message* msg) override;
+
+    bool onFocusEnter(ui::Message* msg) override;
+    bool onTimer(ui::Message* msg) override;
+    bool onMouseDown(ui::Message* msg) override;
+    bool onMouseLeave(ui::Message* msg) override;
+    bool onMouseMove(ui::Message* msg) override;
+    bool onMouseUp(ui::Message* msg) override;
+    bool onDoubleClick(ui::Message* msg) override;
+    bool onKeyDown(ui::Message* msg) override;
+    bool onKeyUp(ui::Message* msg) override;
+    bool onMouseWheel(ui::Message* msg) override;
+    bool onSetCursor(ui::Message* msg) override;
+    bool onTouchMagnify(ui::Message* msg) override;
 
     void onInitTheme(ui::InitThemeEvent& ev) override;
     void onInvalidateRegion(const gfx::Region& region) override;
