@@ -356,13 +356,15 @@ bool Timeline::isMovingCel() const
           m_range.type() == Range::kCels);
 }
 
-bool Timeline::is_copy_key_pressed(ui::Message* msg) {
+bool Timeline::is_copy_key_pressed(ui::Message* msg)
+{
   return
     msg->ctrlPressed() ||  // Ctrl is common on Windows
     msg->altPressed();    // Alt is common on Mac OS X
-  }
+}
 
-bool Timeline::is_select_layer_in_canvas_key_pressed(ui::Message* msg) {
+bool Timeline::is_select_layer_in_canvas_key_pressed(ui::Message* msg)
+{
 #ifdef __APPLE__
   return msg->cmdPressed();
 #else
@@ -370,7 +372,8 @@ bool Timeline::is_select_layer_in_canvas_key_pressed(ui::Message* msg) {
 #endif
 }
 
-SelectLayerBoundariesOp Timeline::get_select_layer_in_canvas_op(ui::Message* msg) {
+SelectLayerBoundariesOp Timeline::get_select_layer_in_canvas_op(ui::Message* msg)
+{
   if (msg->altPressed() && msg->shiftPressed())
     return SelectLayerBoundariesOp::INTERSECT;
   else if (msg->shiftPressed())
