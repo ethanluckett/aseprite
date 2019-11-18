@@ -1710,194 +1710,220 @@ bool Editor::onProcessMessage(Message* msg)
   if (!m_deletedStates.empty())
     m_deletedStates.clear();
 
-  switch (msg->type()) {
+  return Widget::onProcessMessage(msg);
+}
 
-    case kTimerMessage:
-      if (static_cast<TimerMessage*>(msg)->timer() == &m_antsTimer) {
-        if (isVisible() && m_sprite) {
-          drawMaskSafe();
 
-          // Set offset to make selection-movement effect
-          if (m_antsOffset < 7)
-            m_antsOffset++;
-          else
-            m_antsOffset = 0;
-        }
-        else if (m_antsTimer.isRunning()) {
-          m_antsTimer.stop();
-        }
-      }
-      break;
+bool Editor::onTimer(Message* msg)
+{
+  if (static_cast<TimerMessage*>(msg)->timer() == &m_antsTimer) {
+    if (isVisible() && m_sprite) {
+      drawMaskSafe();
 
-    case kFocusEnterMessage: {
-      ASSERT(m_state);
-      if (m_state)
-        m_state->onEditorGotFocus(this);
-      break;
+      // Set offset to make selection-movement effect
+      if (m_antsOffset < 7)
+        m_antsOffset++;
+      else
+        m_antsOffset = 0;
+    }
+    else if (m_antsTimer.isRunning()) {
+      m_antsTimer.stop();
+    }
+  }
+  return Widget::onTimer(msg);
+}
+
+bool Editor::onFocusEnter(Message* msg)
+{
+  ASSERT(m_state);
+  if (m_state)
+    m_state->onEditorGotFocus(this);
+  return Widget::onFocusEnter(msg);
+}
+
+bool Editor::onMouseEnter(Message* msg)
+{
+  m_brushPreview.hide();
+  updateToolLoopModifiersIndicators();
+  updateQuicktool();
+  return Widget::onMouseEnter(msg);
+}
+
+bool Editor::onMouseLeave(Message* msg)
+{
+  m_brushPreview.hide();
+  StatusBar::instance()->showDefaultText();
+  return Widget::onMouseLeave(msg);
+}
+
+bool Editor::onMouseDown(Message* msg)
+{
+  if (m_sprite) {
+    MouseMessage* mouseMsg = static_cast<MouseMessage*>(msg);
+
+    // If we're going to start drawing, we cancel the flashing
+    // layer.
+    if (m_flashing != Flashing::None) {
+      m_flashing = Flashing::None;
+      invalidate();
     }
 
-    case kMouseEnterMessage:
-      m_brushPreview.hide();
+    m_oldPos = mouseMsg->position();
+    updateToolByTipProximity(mouseMsg->pointerType());
+    updateAutoCelGuides(msg);
+
+    // Only when we right-click with the regular "paint bg-color
+    // right-click mode" we will mark indicate that the secondary
+    // button was used (m_secondaryButton == true).
+    if (mouseMsg->right() && !m_secondaryButton) {
+      m_secondaryButton = true;
+    }
+
+    updateToolLoopModifiersIndicators();
+    updateQuicktool();
+    setCursor(mouseMsg->position());
+
+    App::instance()->activeToolManager()
+      ->pressButton(pointer_from_msg(this, mouseMsg));
+
+    EditorStatePtr holdState(m_state);
+    return m_state->onMouseDown(this, mouseMsg);
+  }
+  return Widget::onMouseDown(msg);
+}
+
+bool Editor::onMouseMove(Message* msg)
+{
+  if (m_sprite) {
+    EditorStatePtr holdState(m_state);
+    MouseMessage* mouseMsg = static_cast<MouseMessage*>(msg);
+
+    updateToolByTipProximity(mouseMsg->pointerType());
+    updateAutoCelGuides(msg);
+
+    return m_state->onMouseMove(this, static_cast<MouseMessage*>(msg));
+  }
+  return Widget::onMouseMove(msg);
+}
+
+bool Editor::onMouseUp(Message* msg)
+{
+  if (m_sprite) {
+    EditorStatePtr holdState(m_state);
+    MouseMessage* mouseMsg = static_cast<MouseMessage*>(msg);
+    bool result = m_state->onMouseUp(this, mouseMsg);
+
+    updateToolByTipProximity(mouseMsg->pointerType());
+    updateAutoCelGuides(msg);
+
+    if (!hasCapture()) {
+      App::instance()->activeToolManager()->releaseButtons();
+      m_secondaryButton = false;
+
       updateToolLoopModifiersIndicators();
       updateQuicktool();
-      break;
+      setCursor(mouseMsg->position());
+    }
 
-    case kMouseLeaveMessage:
-      m_brushPreview.hide();
-      StatusBar::instance()->showDefaultText();
-      break;
-
-    case kMouseDownMessage:
-      if (m_sprite) {
-        MouseMessage* mouseMsg = static_cast<MouseMessage*>(msg);
-
-        // If we're going to start drawing, we cancel the flashing
-        // layer.
-        if (m_flashing != Flashing::None) {
-          m_flashing = Flashing::None;
-          invalidate();
-        }
-
-        m_oldPos = mouseMsg->position();
-        updateToolByTipProximity(mouseMsg->pointerType());
-        updateAutoCelGuides(msg);
-
-        // Only when we right-click with the regular "paint bg-color
-        // right-click mode" we will mark indicate that the secondary
-        // button was used (m_secondaryButton == true).
-        if (mouseMsg->right() && !m_secondaryButton) {
-          m_secondaryButton = true;
-        }
-
-        updateToolLoopModifiersIndicators();
-        updateQuicktool();
-        setCursor(mouseMsg->position());
-
-        App::instance()->activeToolManager()
-          ->pressButton(pointer_from_msg(this, mouseMsg));
-
-        EditorStatePtr holdState(m_state);
-        return m_state->onMouseDown(this, mouseMsg);
-      }
-      break;
-
-    case kMouseMoveMessage:
-      if (m_sprite) {
-        EditorStatePtr holdState(m_state);
-        MouseMessage* mouseMsg = static_cast<MouseMessage*>(msg);
-
-        updateToolByTipProximity(mouseMsg->pointerType());
-        updateAutoCelGuides(msg);
-
-        return m_state->onMouseMove(this, static_cast<MouseMessage*>(msg));
-      }
-      break;
-
-    case kMouseUpMessage:
-      if (m_sprite) {
-        EditorStatePtr holdState(m_state);
-        MouseMessage* mouseMsg = static_cast<MouseMessage*>(msg);
-        bool result = m_state->onMouseUp(this, mouseMsg);
-
-        updateToolByTipProximity(mouseMsg->pointerType());
-        updateAutoCelGuides(msg);
-
-        if (!hasCapture()) {
-          App::instance()->activeToolManager()->releaseButtons();
-          m_secondaryButton = false;
-
-          updateToolLoopModifiersIndicators();
-          updateQuicktool();
-          setCursor(mouseMsg->position());
-        }
-
-        if (result)
-          return true;
-      }
-      break;
-
-    case kDoubleClickMessage:
-      if (m_sprite) {
-        MouseMessage* mouseMsg = static_cast<MouseMessage*>(msg);
-        EditorStatePtr holdState(m_state);
-
-        updateToolByTipProximity(mouseMsg->pointerType());
-
-        bool used = m_state->onDoubleClick(this, mouseMsg);
-        if (used)
-          return true;
-      }
-      break;
-
-    case kTouchMagnifyMessage:
-      if (m_sprite) {
-        EditorStatePtr holdState(m_state);
-        return m_state->onTouchMagnify(this, static_cast<TouchMessage*>(msg));
-      }
-      break;
-
-    case kKeyDownMessage:
-#if ENABLE_DEVMODE
-      // Switch render mode
-      if (!msg->ctrlPressed() &&
-          static_cast<KeyMessage*>(msg)->scancode() == kKeyF1) {
-        Preferences::instance().experimental.newRenderEngine(
-          !Preferences::instance().experimental.newRenderEngine());
-        invalidate();
-        return true;
-      }
-#endif
-      if (m_sprite) {
-        EditorStatePtr holdState(m_state);
-        bool used = m_state->onKeyDown(this, static_cast<KeyMessage*>(msg));
-
-        updateToolLoopModifiersIndicators();
-        updateAutoCelGuides(msg);
-        if (hasMouse()) {
-          updateQuicktool();
-          setCursor(ui::get_mouse_position());
-        }
-
-        if (used)
-          return true;
-      }
-      break;
-
-    case kKeyUpMessage:
-      if (m_sprite) {
-        EditorStatePtr holdState(m_state);
-        bool used = m_state->onKeyUp(this, static_cast<KeyMessage*>(msg));
-
-        updateToolLoopModifiersIndicators();
-        updateAutoCelGuides(msg);
-        if (hasMouse()) {
-          updateQuicktool();
-          setCursor(ui::get_mouse_position());
-        }
-
-        if (used)
-          return true;
-      }
-      break;
-
-    case kMouseWheelMessage:
-      if (m_sprite && hasMouse()) {
-        EditorStatePtr holdState(m_state);
-        if (m_state->onMouseWheel(this, static_cast<MouseMessage*>(msg)))
-          return true;
-      }
-      break;
-
-    case kSetCursorMessage:
-      setCursor(static_cast<MouseMessage*>(msg)->position());
+    if (result)
       return true;
-
   }
+  return Widget::onMouseUp(msg);
+}
 
-  bool result = Widget::onProcessMessage(msg);
+bool Editor::onDoubleClick(Message* msg)
+{
+  if (m_sprite) {
+    MouseMessage* mouseMsg = static_cast<MouseMessage*>(msg);
+    EditorStatePtr holdState(m_state);
 
-  if (msg->type() == kPaintMessage &&
-      m_flashing != Flashing::None) {
+    updateToolByTipProximity(mouseMsg->pointerType());
+
+    bool used = m_state->onDoubleClick(this, mouseMsg);
+    if (used)
+      return true;
+  }
+  return Widget::onDoubleClick(msg);
+}
+
+bool Editor::onTouchMagnify(Message* msg)
+{
+  if (m_sprite) {
+    EditorStatePtr holdState(m_state);
+    return m_state->onTouchMagnify(this, static_cast<TouchMessage*>(msg));
+  }
+  return Widget::onTouchMagnify(msg);
+}
+
+bool Editor::onKeyDown(Message* msg)
+{
+#if ENABLE_DEVMODE
+  // Switch render mode
+  if (!msg->ctrlPressed() &&
+      static_cast<KeyMessage*>(msg)->scancode() == kKeyF1) {
+    Preferences::instance().experimental.newRenderEngine(
+      !Preferences::instance().experimental.newRenderEngine());
+    invalidate();
+    return true;
+  }
+#endif
+  if (m_sprite) {
+    EditorStatePtr holdState(m_state);
+    bool used = m_state->onKeyDown(this, static_cast<KeyMessage*>(msg));
+
+    updateToolLoopModifiersIndicators();
+    updateAutoCelGuides(msg);
+    if (hasMouse()) {
+      updateQuicktool();
+      setCursor(ui::get_mouse_position());
+    }
+
+    if (used)
+      return true;
+  }
+  return Widget::onKeyDown(msg);
+}
+
+bool Editor::onKeyUp(Message* msg)
+{
+  if (m_sprite) {
+    EditorStatePtr holdState(m_state);
+    bool used = m_state->onKeyUp(this, static_cast<KeyMessage*>(msg));
+
+    updateToolLoopModifiersIndicators();
+    updateAutoCelGuides(msg);
+    if (hasMouse()) {
+      updateQuicktool();
+      setCursor(ui::get_mouse_position());
+    }
+
+    if (used)
+      return true;
+  }
+  return Widget::onKeyUp(msg);
+}
+
+bool Editor::onMouseWheel(Message* msg)
+{
+  if (m_sprite && hasMouse()) {
+    EditorStatePtr holdState(m_state);
+    if (m_state->onMouseWheel(this, static_cast<MouseMessage*>(msg)))
+      return true;
+  }
+  return Widget::onMouseWheel(msg);
+}
+
+bool Editor::onSetCursor(Message* msg)
+{
+    setCursor(static_cast<MouseMessage*>(msg)->position());
+    return true;
+}
+
+bool Editor::onPaint(Message* msg)
+{
+  bool result = Widget::onPaint(msg);
+
+  if (m_flashing != Flashing::None) {
     const PaintMessage* ptmsg = static_cast<const PaintMessage*>(msg);
     if (ptmsg->count() == 0) {
       if (m_flashing == Flashing::WithFlashExtraCel) {

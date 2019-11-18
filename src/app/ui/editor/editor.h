@@ -304,6 +304,21 @@ namespace app {
 
   protected:
     bool onProcessMessage(ui::Message* msg) override;
+    bool onPaint(ui::Message* msg) override;
+    bool onTimer(ui::Message* msg) override;
+    bool onKeyDown(ui::Message* msg) override;
+    bool onKeyUp(ui::Message* msg) override;
+    bool onFocusEnter(ui::Message* msg) override;
+    bool onMouseDown(ui::Message* msg) override;
+    bool onMouseUp(ui::Message* msg) override;
+    bool onDoubleClick(ui::Message* msg) override;
+    bool onMouseEnter(ui::Message* msg) override;
+    bool onMouseLeave(ui::Message* msg) override;
+    bool onMouseMove(ui::Message* msg) override;
+    bool onSetCursor(ui::Message* msg) override;
+    bool onMouseWheel(ui::Message* msg) override;
+    bool onTouchMagnify(ui::Message* msg) override;
+
     void onSizeHint(ui::SizeHintEvent& ev) override;
     void onResize(ui::ResizeEvent& ev) override;
     void onPaint(ui::PaintEvent& ev) override;
