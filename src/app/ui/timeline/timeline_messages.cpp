@@ -26,19 +26,6 @@ using namespace ui;
 
 namespace app {
 
-bool Timeline::onProcessMessage(Message* msg)
-{
-  if (msg->type() < kFirstRegisteredMessage) {
-    auto handler = m_message_handlers[msg->type()];
-    bool done = (this->*handler)(msg);
-    if (done) {
-      return true;
-    }
-  }
-
-  return Widget::onProcessMessage(msg);
-}
-
 bool Timeline::onFocusEnter(Message* msg)
 {
     App::instance()->inputChain().prioritize(this, msg);

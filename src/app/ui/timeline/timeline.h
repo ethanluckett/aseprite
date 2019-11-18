@@ -161,7 +161,6 @@ namespace app {
     void clearAndInvalidateRange();
 
   protected:
-    bool onProcessMessage(ui::Message* msg) override;
 
     bool onFocusEnter(ui::Message* msg) override;
     bool onTimer(ui::Message* msg) override;
