@@ -29,7 +29,7 @@ namespace app {
 bool Timeline::onFocusEnter(Message* msg)
 {
     App::instance()->inputChain().prioritize(this, msg);
-    return false;
+    return Widget::onFocusEnter(msg);
 }
 
 bool Timeline::onTimer(Message* msg)
@@ -59,7 +59,7 @@ bool Timeline::onTimer(Message* msg)
       m_clipboard_timer.stop();
     }
   }
-  return false;
+  return Widget::onTimer(msg);
 }
 
 bool Timeline::onMouseDown(Message* msg)
@@ -398,7 +398,7 @@ bool Timeline::onMouseDown(Message* msg)
 
   // Redraw the new clicked part (header, layer or cel).
   invalidateHit(m_clk);
-  return false;
+  return Widget::onMouseDown(msg);
 }
 
 bool Timeline::onMouseLeave(Message* msg)
@@ -407,7 +407,7 @@ bool Timeline::onMouseLeave(Message* msg)
     invalidateHit(m_hot);
     m_hot = Hit();
   }
-  return false;
+  return Widget::onMouseLeave(msg);
 }
 
 bool Timeline::onMouseMove(Message* msg)
@@ -767,7 +767,7 @@ bool Timeline::onMouseUp(Message* msg)
     return true;
   }
 
-  return false;
+  return Widget::onMouseUp(msg);
 }
 
 bool Timeline::onDoubleClick(Message* msg)
@@ -812,7 +812,7 @@ bool Timeline::onDoubleClick(Message* msg)
 
   }
 
-  return false;
+  return Widget::onDoubleClick(msg);
 }
 
 bool Timeline::onKeyDown(Message* msg)
@@ -854,7 +854,7 @@ bool Timeline::onKeyDown(Message* msg)
   if (used)
     return true;
 
-  return false;
+  return Widget::onKeyDown(msg);
 }
 
 bool Timeline::onKeyUp(Message* msg)
@@ -874,7 +874,7 @@ bool Timeline::onKeyUp(Message* msg)
   if (used)
     return true;
 
-  return false;
+  return Widget::onKeyUp(msg);
 }
 
 bool Timeline::onMouseWheel(Message* msg)
@@ -916,7 +916,7 @@ bool Timeline::onMouseWheel(Message* msg)
     }
   }
 
-  return false;
+  return Widget::onMouseWheel(msg);
 }
 
 bool Timeline::onSetCursor(Message* msg)
@@ -926,7 +926,7 @@ bool Timeline::onSetCursor(Message* msg)
     return true;
   }
 
-  return false;
+  return Widget::onSetCursor(msg);
 }
 
 bool Timeline::onTouchMagnify(Message* msg)
@@ -935,7 +935,7 @@ bool Timeline::onTouchMagnify(Message* msg)
       m_zoom + m_zoom * static_cast<ui::TouchMessage*>(msg)->magnification(),
       true);
 
-  return false;
+  return Widget::onTouchMagnify(msg);
 }
 
 
